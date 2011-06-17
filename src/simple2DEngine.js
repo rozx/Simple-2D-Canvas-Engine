@@ -1,9 +1,8 @@
 			var IMAGE = 0 , TEXT = 1;
 			var MAXFPS = 120;
 			
+			
 			function Director(){
-				
-
 				
 				this.MaxFPS = MAXFPS;
 				this.ShowFPS = true;
@@ -14,8 +13,7 @@
 				this.FramesDone = 0;
 				
 				
-				
-				this.initTimer = function (DirectorElementName){
+				this.InitTimer = function (DirectorElementName){
 				
 					setInterval(DirectorElementName + ".CountFPS()", 1000);
 					setInterval(DirectorElementName + ".Draw()", parseInt(1000 / this.MaxFPS));
@@ -23,20 +21,50 @@
 				}
 				
 				
-				this.setCanvas = function(ElementCanvas){
+				this.SetCanvas = function(ElementCanvas){
 					this.Canvas = ElementCanvas;
 					this.Context = ElementCanvas.getContext("2d");
 					
 					this.Scene.Width = this.Canvas.width;
 					this.Scene.Height = this.Canvas.height;
 					
+					
+					
 					console.log("Canvas Setting Done!");
 					console.log(this.Context);
 				};
 				
-				this.setShowFPS = function (IsShow){
+				this.SetShowFPS = function (IsShow){
 					this.ShowFPS = IsShow;
 				};
+				
+				this.OnMouseMove = function(func){
+					
+					this.Canvas.addEventListener("mousemove",func);
+					
+				};
+				
+				
+				this.GetMousePosXY= function(e){
+				
+					if (e.pageX != undefined && e.pageY != undefined) {
+						x = e.pageX;
+						y = e.pageY;
+					}
+					else {
+						x = e.clientX + document.body.scrollLeft +
+							document.documentElement.scrollLeft;
+						y = e.clientY + document.body.scrollTop +
+							document.documentElement.scrollTop;
+					}
+				
+					this.Scene.Mouse.X = x - this.Canvas.offsetLeft;
+					this.Scene.Mouse.Y = y - this.Canvas.offsetTop;
+				};
+				
+
+				
+				
 				
 				this.Draw = function(){
 					this.FramesDone++;
@@ -86,7 +114,8 @@
 							}
 						}
 					// Call Collition detection method
-						this.Scene.CollideDetect();
+					
+						if(this.Scene.isCollideDetct)	this.Scene.CollideDetect();
 							
 					
 					
@@ -115,32 +144,75 @@
 				this.Height = undefined;
 				
 				this.Sprites = [];
+				this.isCollideDetct = true;
+				
+				this.Mouse = function(){
+					this.X = undefined;
+					this.Y = undefined;
+					this.width = 32;
+					this.height = 32;
+				};
 				
 				
 				this.CollideDetect = function(){
 					
-						for(var i=0;i<this.Sprites.length;i++){
-							if(this.Sprites[i]){
-								
-								
-								if(this.Sprites[i].x < 0 || (this.Sprites[i].x + this.Sprites[i].Width) > this.Width ){
-									
-									
-									if(this.Sprites[i].OnCollideXEdge){
-										this.Sprites[i].OnCollideXEdge();
-									}
-								}
-								
-								if(this.Sprites[i].y < 0 || (this.Sprites[i].y + this.Sprites[i].Height) > this.Height ){
-									
-									
-									if(this.Sprites[i].OnCollideYEdge){
-										this.Sprites[i].OnCollideYEdge();
-									}
-								}
+						var TempCDSprites = [];
+						var i=0, TempIndex = 0;
+						
+						while(i<this.Sprites.length){
+							if(this.Sprites[i] && this.Sprites[i].isCollide){
+								TempCDSprites[TempIndex] = this.Sprites[i];
+								TempIndex++;
+							}
+							
+							i++;
 						}
-					};
-				}
+						 
+					
+						for(var i=0;i<TempIndex;i++){
+								
+							if(TempCDSprites[i].x < 0 || (TempCDSprites[i].x + TempCDSprites[i].Width) > this.Width ){
+									
+									
+								if(TempCDSprites[i].OnCollideXEdge){
+									TempCDSprites[i].OnCollideXEdge();
+								}
+							}
+								
+							if(TempCDSprites[i].y < 0 || (TempCDSprites[i].y + TempCDSprites[i].Height) > this.Height ){
+								
+								if(TempCDSprites[i].OnCollideYEdge){
+									TempCDSprites[i].OnCollideYEdge();
+								}
+							}
+							
+							
+							
+							for(var Ci=0;Ci<TempIndex;Ci++){
+								if(Ci!=i){
+									
+									var XCollide = (Math.abs((TempCDSprites[i].x + TempCDSprites[i].Width / 2) - 
+										(TempCDSprites[Ci].x + TempCDSprites[Ci].Width / 2)) < 
+										Math.abs((TempCDSprites[i].Width + TempCDSprites[Ci].Width) / 2) 
+										);
+									var YCollide = (Math.abs((TempCDSprites[i].y + TempCDSprites[i].Height / 2) -
+										(TempCDSprites[Ci].y + TempCDSprites[Ci].Height / 2)) <
+										Math.abs((TempCDSprites[i].Height + TempCDSprites[Ci].Height) / 2)
+										);
+									
+									
+									if(XCollide && YCollide) {
+										if(TempCDSprites[i].OnCollided) TempCDSprites[i].OnCollided(TempCDSprites[Ci]);
+									}
+									
+									
+							}
+							
+						}
+						
+						
+					}
+				};
 				
 				this.appendSprite = function(Sprite,Zid){
 					if(this.Sprites[Zid]){
@@ -148,7 +220,7 @@
 						
 					} else {
 						this.Sprites[Zid] = Sprite; 
-					
+						this.Sprites[Zid].Zid = Zid;
 					}
 					
 				};
@@ -173,9 +245,11 @@
 			
 			function Sprite(){
 				
+				this.Zid = undefined;
 				this.id = undefined;
 				this.SpriteType = undefined;
 				
+				this.isCollide = false;
 				
 				this.Width = undefined;
 				this.Height = undefined;
@@ -199,6 +273,8 @@
 				
 				this.OnCollideXEdge = undefined;
 				this.OnCollideYEdge = undefined;
+				
+				this.OnCollided = undefined;
 				
 				
 				this.Create = function(id) {
@@ -265,7 +341,20 @@
 				this.SetSpeed = function(SpeedX,SpeedY) {
 					this.SpeedX = SpeedX;
 					this.SpeedY = SpeedY;
-				}
+				};
+				
+				this.SetText = function(txt) {
+					this.Text = txt;
+					this.Width = parseInt((txt.length * this.Size) / 2);
+				};
+				
+				
 				
 				
 			}
+			
+			
+			function RectInsects(Rect1,Rect2){
+				
+				
+			};

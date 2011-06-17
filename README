@@ -1,8 +1,12 @@
+- version 0.04
+	[+]added collition detection.
+	[-]fixed image bugs.
+	[-]lots of bug fixed. 
 - version 0.03
 	[-]fixed bugs.
 
 - version 0.02
-	[+]Add Collition detect.
+	[+]Added Collition detect.
 	[-]fixed bugs.
 
 - version 0.01
