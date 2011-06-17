@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028)http://localhost:3000/canvas -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Canvas Demo</title><link rel="stylesheet" href="http://localhost:3000/stylesheets/style.css"><!--script(type='text/javascript', src='/javascripts/jquery.js')--><script type="text/javascript" src="./Collition Demo_files/simple2DEngine.js"></script><script type="text/javascript">var director = new Director();
+var testSprite;
+
+function Init(){
+  var Canvas = document.getElementById("Canvas");
+  //var ctx = Canvas.getContext("2d");
+
+  Canvas.width = 800;
+  Canvas.height = 600;
+
+  director.SetCanvas(Canvas);
+  director.InitTimer("director");
+
+
+  testSprite = new Sprite();
+  testSprite.Create("test");
+  testSprite.SetPos(300,300);
+  testSprite.CreateNewImg("http://icons.iconarchive.com/icons/mad-science/arcade-saturdays/32/Mario-Jumping-icon.png");
+  testSprite.SetSpeed(300,400);
+
+  testSprite.isCollide = true;
+
+  testSprite.OnCollided = function(CollidedSprite){
+    testSprite.SetSpeed(-1 * testSprite.SpeedX,-1 * testSprite.SpeedY) ;
+
+    testSprite.SetPos(testSprite.x + testSprite.SpeedX / director.FPS,testSprite.y + testSprite.SpeedY / director.FPS);
+
+    CollidedSprite.SetSpeed(-1 * CollidedSprite.SpeedX,-1 * CollidedSprite.SpeedY);
+
+    CollidedSprite.SetPos(CollidedSprite.x+(CollidedSprite.SpeedX / director.FPS), CollidedSprite.y + (CollidedSprite.SpeedY / director.FPS));
+
+  };
+
+
+
+  testSprite.OnCollideXEdge = function(){
+    testSprite.SetSpeed(-1 * testSprite.SpeedX,testSprite.SpeedY);
+  }; 
+
+  testSprite.OnCollideYEdge = function(){
+    testSprite.SetSpeed(testSprite.SpeedX,-1 * testSprite.SpeedY);
+  }; 
+
+
+  var testTextSprite = new Sprite();
+  testTextSprite.Create("testText");
+  testTextSprite.SetPos(500,400);
+  testTextSprite.CreateNewText("Hello World!This is Simple 2D engine!", "sans-serif", "red" , 15 , "bold");
+  testTextSprite.SetSpeed(400,-400);
+
+  testTextSprite.isCollide = true;
+
+  testTextSprite.OnCollided = function(CollidedSprite){
+    testTextSprite.SetSpeed(-1 * testTextSprite.SpeedX,-1 * testTextSprite.SpeedY);
+
+    testTextSprite.SetPos(testTextSprite.x + testTextSprite.SpeedX / director.FPS,testTextSprite.y + testTextSprite.SpeedY / director.FPS);
+
+    CollidedSprite.SetSpeed(-1 * CollidedSprite.SpeedX,-1 * CollidedSprite.SpeedY);
+
+    CollidedSprite.SetPos(CollidedSprite.x+(CollidedSprite.SpeedX / director.FPS), CollidedSprite.y + (CollidedSprite.SpeedY / director.FPS));
+
+  };
+
+
+
+  testTextSprite.OnCollideXEdge = function(){
+    testTextSprite.SetSpeed(-1 * testTextSprite.SpeedX,testTextSprite.SpeedY);
+  }; 
+
+  testTextSprite.OnCollideYEdge = function(){
+    testTextSprite.SetSpeed(testTextSprite.SpeedX,-1 * testTextSprite.SpeedY);
+  }; 
+
+  director.OnMouseMove(function(e) {
+    director.GetMousePosXY(e);
+
+  });
+
+
+
+  director.Scene.appendSprite(testSprite,1);
+  director.Scene.appendSprite(testTextSprite,1);
+
+}
+
+
+
+</script></head><body><script>window.onload = Init;
+</script><canvas id="Canvas" style="border:dotted;padding:5px;" width="800" height="600">Get rid of it! ur broswer is too old : &lt;</canvas></body></html>
