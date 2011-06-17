@@ -1,14 +1,14 @@
 - version 0.04
-	[+]added collition detection.
+	[+]added collition detect.
+	[+]added "Director.OnMouseMove" to get mouse move events.
 	[-]fixed image bugs.
 	[-]lots of bug fixed. 
 - version 0.03
 	[-]fixed bugs.
 
 - version 0.02
-	[+]Added Collition detect.
 	[-]fixed bugs.
 
 - version 0.01
-	[+]First Version.
-	[+]Defined Director, Scene, Sprites Elements.
+	[+]first Version.
+	[+]defined Director, Scene, Sprites Elements.
