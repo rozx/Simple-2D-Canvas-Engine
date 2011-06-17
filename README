@@ -1,7 +1,10 @@
-- version 0.01
-	[+]First Version.
-	[+]Defined Director, Scene, Sprites Elements.
+- version 0.03
+	[-]fixed bugs.
 
 - version 0.02
 	[+]Add Collition detect.
 	[-]fixed bugs.
+
+- version 0.01
+	[+]First Version.
+	[+]Defined Director, Scene, Sprites Elements.

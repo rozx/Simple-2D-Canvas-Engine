@@ -1,16 +1,19 @@
 			var IMAGE = 0 , TEXT = 1;
+			var MAXFPS = 120;
 			
 			function Director(){
 				
 
 				
-				this.MaxFPS = 120;
+				this.MaxFPS = MAXFPS;
 				this.ShowFPS = true;
 				this.Scene = new Scene();
 				this.Canvas = undefined;
 				this.Context = undefined;
 				this.FPS = 0;
 				this.FramesDone = 0;
+				
+				
 				
 				this.initTimer = function (DirectorElementName){
 				
@@ -67,7 +70,9 @@
 								
 								switch(this.Scene.Sprites[i].SpriteType){
 									case IMAGE:
-									this.Context.drawImage(this.Scene.Sprites[i].img,this.Scene.Sprites[i].x,this.Scene.Sprites[i].y);
+										if(this.Scene.Sprites[i].img.complete){
+											this.Context.drawImage(this.Scene.Sprites[i].img,this.Scene.Sprites[i].x,this.Scene.Sprites[i].y);
+										}
 									break;
 									
 									case TEXT:
@@ -95,6 +100,11 @@
 					
 					//console.log("FPS:" + this.FPS);
 				};
+				
+				
+				//Timer Setting
+				//this.CountFPSTimer = setInterval(this.CountFPS(), 1000);
+				//this.DrawTimer = setInterval(this.Draw(), parseInt(1000 / this.MaxFPS));
 				
 				
 			}
@@ -218,9 +228,12 @@
 				this.CreateNewImg= function(src) {
 				
 					if(this.id){
-				
+						
+						/*
+						
 						var MyBody = document.getElementsByTagName("body")[0];
 						var NewImg = document.createElement("img");
+						
 						
 						NewImg.id = this.id;
 						NewImg.src=src;		
@@ -229,20 +242,23 @@
 						NewImg.height = 0;
 					
 						MyBody.appendChild(NewImg);
-					
+						*/
+						
+						
 						this.img = new Image();
 						this.img.src = src;
 						
-						
-						this.Width = this.img.width;
-						this.Height = this.img.height;
-						
-						console.log(this.img.height);
-						
-
-						
+						this.img.onload =this.ImageFinishLoading(this.img.width,this.img.height);
 						this.SpriteType = IMAGE;
 					}
+				};
+				
+				this.ImageFinishLoading = function(w,h){
+					
+						this.Width = w;
+						this.Height = h;
+						
+						console.log(w + ":" + h);
 				};
 				
 				
