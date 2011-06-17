@@ -1,6 +1,7 @@
 - version 0.04
 	[+]added collition detect.
 	[+]added "Director.OnMouseMove" to get mouse move events.
+	[+]added colliton demo.
 	[-]fixed image bugs.
 	[-]lots of bug fixed. 
 - version 0.03
