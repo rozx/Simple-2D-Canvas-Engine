@@ -11,6 +11,12 @@
 				this.Context = undefined;
 				this.FPS = 0;
 				this.FramesDone = 0;
+				this.BackgroundColor = "black";
+				
+				
+				this.SetBackgroundColor = function(color){
+					this.BackgroundColor = color;
+				};
 				
 				
 				this.InitTimer = function (DirectorElementName){
@@ -18,7 +24,7 @@
 					setInterval(DirectorElementName + ".CountFPS()", 1000);
 					setInterval(DirectorElementName + ".Draw()", parseInt(1000 / this.MaxFPS));
 					
-				}
+				};
 				
 				
 				this.SetCanvas = function(ElementCanvas){
@@ -81,7 +87,7 @@
 						}
 						
 					
-						this.Context.fillStyle = "black";  
+						this.Context.fillStyle = this.BackgroundColor;  
 						
 						this.Context.fillRect(0,0,this.Canvas.width,this.Canvas.height);
 						
@@ -94,7 +100,7 @@
 						}
 						
 						for(var i=0;i<this.Scene.Sprites.length;i++){
-							if(this.Scene.Sprites[i]){
+							if(this.Scene.Sprites[i]  && this.Scene.Sprites[i].Show){
 								
 								switch(this.Scene.Sprites[i].SpriteType){
 									case IMAGE:
@@ -111,6 +117,9 @@
 									break;
 									//alert(this.Scene.Sprites[i].img);
 								}
+								
+								if(this.Scene.Sprites[i].Updating) this.Scene.Sprites[i].Updating();
+								
 							}
 						}
 					// Call Collition detection method
@@ -248,6 +257,9 @@
 				this.Zid = undefined;
 				this.id = undefined;
 				this.SpriteType = undefined;
+				this.Show = true;
+				
+				this.Updating = undefined;
 				
 				this.isCollide = false;
 				
@@ -268,6 +280,8 @@
 				// For Image
 				
 				this.img = undefined;
+				this.Frames = [];
+				this.PlayingFrame = 0;
 				
 				//Collision detection
 				
@@ -318,13 +332,31 @@
 						NewImg.height = 0;
 					
 						MyBody.appendChild(NewImg);
-						*/
 						
+						*/
 						
 						this.img = new Image();
 						this.img.src = src;
 						
-						this.img.onload =this.ImageFinishLoading(this.img.width,this.img.height);
+						console.log(this.img.offsetHeight);
+						
+						
+						if(this.img.complete){
+							
+
+							this.Width = this.img.width;
+							this.Height = this.img.height;
+							
+							console.log(this.Width + ":" + this.Height);
+							
+						} else {
+							
+							this.img.onload = this.ImageFinishLoading(this.img.width,this.img.height);
+							
+						}
+						
+						this.Frames[0] = this.img;
+						
 						this.SpriteType = IMAGE;
 					}
 				};
@@ -333,8 +365,50 @@
 					
 						this.Width = w;
 						this.Height = h;
+						console.log(this.Width + ":" + this.Height);
 						
-						console.log(w + ":" + h);
+				};
+				
+				this.appendNewFrame = function(imgsrc,id){
+					if(this.Frames[id]){
+						this.appendNewFrame(imgsrc,id + 1);
+					} else {
+						var FrameImg = new Image();
+						FrameImg.src = imgsrc;
+						
+						this.Frames[id] = FrameImg;
+						
+					}
+					
+				};
+				
+				this.removeFramebyId = function(id){
+					if(this.Frames[id]){
+						this.Frames[id]=undefined;
+					}
+				};
+				
+				
+				this.SetPlayingFrame = function(frameid){
+					if(this.Frames[frameid]){
+						
+						this.PlayingFrame = frameid;
+						
+						this.img = this.Frames[frameid];
+						
+						switch(this.SpriteType){
+							case IMAGE:
+								this.Width = this.img.width;
+								this.Height = this.img.height;
+				
+							break;
+						}
+						
+					} else {
+						this.SetPlayingFrame(0);
+						console.warn("Error! Frame dose not exist!");
+					}
+					
 				};
 				
 				
@@ -352,9 +426,3 @@
 				
 				
 			}
-			
-			
-			function RectInsects(Rect1,Rect2){
-				
-				
-			};
