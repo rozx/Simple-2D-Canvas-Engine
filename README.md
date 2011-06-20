@@ -21,7 +21,7 @@ Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before tryin
 * [-]fixed bugs.
 * [?]known issues: cant get image width and height when creating.
 * [+]added Mario demo.
-* More : <a href="README">README</a> 
+* More : check README 
 
 ### Examples ###
 
