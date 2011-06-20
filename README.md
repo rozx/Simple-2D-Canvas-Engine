@@ -10,5 +10,5 @@
 
 <h1>Examples</h1>
 
-<p><a href="/examples/Collition Demo.html">Collition Demo(Collition detection)</a> </p>
-<p><a href="/examples/Mario Demo - By Simple Canvas 2D Engine.html">Mario Demo(Sprite Frame)</a></p>
+<p><a href="./examples/Collition Demo.html">Collition Demo(Collition detection)</a> </p>
+<p><a href="./examples/Mario Demo - By Simple Canvas 2D Engine.html">Mario Demo(Sprite Frame)</a></p>
