@@ -1,7 +1,6 @@
 <h1>Update logs</h1>
 
 - version 0.05
-<br>
 	-[+]Sprite got Frame system.
 		<p>   .SetPlayingFrame(id) -Set playing frame </p>
 		<p>   .appendNewFrame(imgsrc,id) -Append new frame</p>
