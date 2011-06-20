@@ -16,12 +16,12 @@ Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before tryin
 
 **version 0.05**
 
-* [+]Sprite got Frame system.
-* [+]Sprite got updating method.
-* [-]fixed bugs.
-* [?]known issues: cant get image width and height when creating.
-* [+]added Mario demo.
-* More : check README 
+** [+]Sprite got Frame system.
+** [+]Sprite got updating method.
+** [-]fixed bugs.
+** [?]known issues: cant get image width and height when creating.
+** [+]added Mario demo.
+** More : check README 
 
 ### Examples ###
 
