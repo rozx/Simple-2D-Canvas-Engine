@@ -5,7 +5,7 @@ Simple2D
 
 Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before trying it, make sure to upgrade your browser.
 
-features:
+-features:
 * collition system.
 * sprites system.
 * and more.
@@ -13,7 +13,7 @@ features:
 
 ### Update log ###
 
-version 0.05
+-version 0.05
 * [+]Sprite got Frame system.
 * [+]Sprite got updating method.
 * [-]fixed bugs.
@@ -23,4 +23,4 @@ version 0.05
 
 ### Examples ###
 
-[#collition](http://github.com/rozx/Simple-2D-Canvas-Engine/examples/Collition Demo.html)
+[Collition Demo](http://github.com/rozx/Simple-2D-Canvas-Engine/examples/Collition Demo.html)
