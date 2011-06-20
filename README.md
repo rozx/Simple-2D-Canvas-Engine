@@ -8,7 +8,7 @@
 - [+]added Mario demo.
 - More : <a href="README">README</a> 
 
-<h1>Examples</h2>
+<h1>Examples</h1>
 
-<a href="/examples/Collition Demo.html">Collition Demo(Collition detection)</a> 
-<a href="/examples/Mario Demo - By Simple Canvas 2D Engine.html">Mario Demo(Sprite Frame)</a> 
+<p><a href="/examples/Collition Demo.html">Collition Demo(Collition detection)</a> </p>
+<p><a href="/examples/Mario Demo - By Simple Canvas 2D Engine.html">Mario Demo(Sprite Frame)</a></p>
