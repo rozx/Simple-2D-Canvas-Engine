@@ -25,4 +25,4 @@ Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before tryin
 
 ### Examples ###
 
-[Collition Demo](http://github.com/rozx/Simple-2D-Canvas-Engine/examples/Collition Demo.html)
+***see /examples/***
