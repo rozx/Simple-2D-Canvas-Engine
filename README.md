@@ -6,6 +6,7 @@
 - [-]fixed bugs.
 - [?]known issues: cant get image width and height when creating.
 - [+]added Mario demo.
+- More : <a href="README">README</a> 
 
 <h1>Examples</h2>
 
