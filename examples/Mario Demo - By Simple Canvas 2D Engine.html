@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)http://localhost:3000/mario -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Mario Demo - By Simple Canvas 2D Engine</title><link rel="stylesheet" href="http://localhost:3000/stylesheets/style.css"><script type="text/javascript" src="./Engine/simple2DEngine.js"></script><script type="text/javascript">var director = new Director();
+
+var CloundSprite = [];
+var GroundSprite = [];
+var Mario = undefined;
+
+
+function Init(){
+
+  var Canvas = document.getElementById("Canvas");
+
+  Canvas.width = 800;
+  Canvas.height = 600;
+
+  director.SetCanvas(Canvas);
+  director.InitTimer("director");
+
+  director.SetBackgroundColor("rgb(64,112,224)");
+
+  Mario = new Sprite();
+  Mario.Create("Mario");
+  Mario.SetPos(400,520);
+  Mario.CreateNewImg('./GameRes/Mario/Mario_R_Normal.png');
+
+  Mario.appendNewFrame('./GameRes/Mario/Mario_R_Run1.png',1);
+  Mario.appendNewFrame('./GameRes/Mario/Mario_R_Run2.png',2);
+  Mario.appendNewFrame('./GameRes/Mario/Mario_R_Run3.png',3);
+  Mario.appendNewFrame('./GameRes/Mario/Mario_R_Run3.png',4);
+
+  setInterval("PlayMario()",50)
+
+  director.Scene.appendSprite(Mario,1);
+
+
+  for(var i=0;i<10;i++){
+
+
+  CloundSprite[i] = new Sprite();
+  CloundSprite[i].Create("Clound" + i);
+  CloundSprite[i].SetPos(800,200);
+  CloundSprite[i].SetSpeed(-1000,0);
+  CloundSprite[i].CreateNewImg('./GameRes/clound.png');
+
+  director.Scene.appendSprite(CloundSprite[i],1);
+
+  }
+
+
+  CloundSprite[0].Updating = function(){
+
+    for(var i=0;i<CloundSprite.length;i++){
+
+      if(CloundSprite[i].x + 64 < 0){
+        CloundSprite[i].x = Canvas.width + parseInt(Math.random() * Canvas.width);
+        CloundSprite[i].y = parseInt(Math.random() * 400);
+      }
+    }
+  };
+
+
+
+  for(var i=0;i<(Canvas.width / 32) + 1;i++){
+    GroundSprite[i] = new Sprite();
+    GroundSprite[i].Create("Ground" + i);
+    GroundSprite[i].CreateNewImg('./GameRes/LightGround.png');
+    GroundSprite[i].SetPos(i * 32 ,600 - 50);
+    GroundSprite[i].SetSpeed(-1000,0);
+    director.Scene.appendSprite(GroundSprite[i],1);
+  }
+
+  GroundSprite[0].Updating = function(){
+    for(var i=0;i<GroundSprite.length;i++){
+      if(GroundSprite[i].x + 32 < 0){
+        GroundSprite[i].x = Canvas.width;
+      }
+    }
+  };
+
+
+
+}
+
+function PlayMario(){
+
+  if(Mario.PlayingFrame<4){
+    Mario.SetPlayingFrame(Mario.PlayingFrame + 1);
+  }
+
+  if(Mario.PlayingFrame==4) Mario.SetPlayingFrame(1);
+
+}
+</script></head><body><script>window.onload = Init;
+</script><canvas id="Canvas" width="800" height="600">Get rid of it! ur broswer is too old : &lt;</canvas></body></html>
