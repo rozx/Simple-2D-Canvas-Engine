@@ -25,5 +25,5 @@ Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before tryin
 
 ### Examples ###
 
-* [Collition Example(Using Collition Detection System)](http://rozx.github.com/Examples/Collition%20Demo.html)
-* [Mario Demp(Using Sprite Frames System)](http://rozx.github.com/Examples/Mario Demo - By Simple Canvas 2D Engine.html)
+* [Collition Demo(Using Collition Detection System)](http://rozx.github.com/Examples/Collition%20Demo.html)
+* [Mario Demo(Using Sprite Frames System)](http://rozx.github.com/Examples/Mario Demo - By Simple Canvas 2D Engine.html)
