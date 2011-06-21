@@ -1,3 +1,7 @@
+- version 0.06
+	[+]Packaged event funcions.
+	[+]some small changes.
+	[+]Added Mario demo 2 using key event functions.
 - version 0.05
 	[+]Sprite got Frame system.
 			.SetPlayingFrame(id) -Set playing frame

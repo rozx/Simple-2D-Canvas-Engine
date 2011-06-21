@@ -1,6 +1,19 @@
 			var IMAGE = 0 , TEXT = 1;
 			var MAXFPS = 120;
 			
+			function Helper(){
+				
+				this.Within = function(num,numleft,numright){
+					if(num >= numleft && num <= numright){
+						return true;
+					} else { 
+						return false;
+					}
+					
+				};
+			
+			}
+			
 			
 			function Director(){
 				
@@ -12,6 +25,9 @@
 				this.FPS = 0;
 				this.FramesDone = 0;
 				this.BackgroundColor = "black";
+				this.MouseX = undefined;
+				this.MouseY = undefined;
+				this.Helper = new Helper();
 				
 				
 				this.SetBackgroundColor = function(color){
@@ -44,10 +60,43 @@
 					this.ShowFPS = IsShow;
 				};
 				
+				// Event
+				
 				this.OnMouseMove = function(func){
-					
 					this.Canvas.addEventListener("mousemove",func);
+					console.warn("Suggestion : Call .GetMousePosXY(e) can get exact mouse position!");
+				};
+				
+				
+				
+				this.OnEvent = function(ev,func){
 					
+					console.log("Created new event listener:" + ev);
+					
+					switch(ev){
+						case "onkeydown","keydown":
+							//this.Canvas.onkeydown = func;
+							
+							document.getElementsByTagName("body")[0].onkeydown = func;
+							
+							break;
+						case "onkeyup","keyup":
+							//this.Canvas.onkeyup = func;
+							
+							document.getElementsByTagName("body")[0].onkeyup = func;
+							break;
+						case "onkeypress","keypress":
+							
+							
+							//this.Canvas.onkeypress = func;
+							
+							document.getElementsByTagName("body")[0].onkeypress = func;
+							
+							break;
+						default:
+							this.Canvas.addEventListener(ev,func);
+							break;
+					}
 				};
 				
 				
@@ -64,8 +113,10 @@
 							document.documentElement.scrollTop;
 					}
 				
-					this.Scene.Mouse.X = x - this.Canvas.offsetLeft;
-					this.Scene.Mouse.Y = y - this.Canvas.offsetTop;
+					
+						this.MouseX = x - this.Canvas.offsetLeft;
+						this.MouseY = y - this.Canvas.offsetTop;
+					
 				};
 				
 
@@ -154,13 +205,6 @@
 				
 				this.Sprites = [];
 				this.isCollideDetct = true;
-				
-				this.Mouse = function(){
-					this.X = undefined;
-					this.Y = undefined;
-					this.width = 32;
-					this.height = 32;
-				};
 				
 				
 				this.CollideDetect = function(){

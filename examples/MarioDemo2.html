@@ -1,0 +1,133 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Mario Demo 2 - By Simple Canvas 2D Engine</title>
+		<script type="text/javascript" src="./Engine/simple2DEngine.js"></script>
+		<script type="text/javascript">
+			var director = new Director();
+			var Speed = 0;
+			var CloundSprite = [];
+			var GroundSprite = [];
+			
+
+			function init(){
+				var Canvas = document.getElementById("Canvas");
+				director.SetCanvas(Canvas);
+				director.InitTimer("director");
+				
+				director.SetBackgroundColor("rgb(64,112,224)");
+				console.log(director);
+				
+				director.OnEvent("keydown",function(e){
+					console.log(e.keyCode);
+					
+					switch(e.keyCode){
+						case 37:
+							Speed+=5;
+							Setspeed(Speed);
+							break;
+						
+						case 39:
+							Speed-=5;
+							Setspeed(Speed);
+							break;
+					}
+				});
+				
+				
+				
+				for(var i=0;i<10;i++){
+				
+				
+					CloundSprite[i] = new Sprite();
+					CloundSprite[i].Create("Clound" + i);
+					CloundSprite[i].SetPos(800,200);
+					CloundSprite[i].SetSpeed(0,0);
+					CloundSprite[i].CreateNewImg('./GameRes/clound.png');
+				
+					director.Scene.appendSprite(CloundSprite[i],1);
+				
+				}
+				
+				
+				CloundSprite[0].Updating = function(){
+				
+					for(var i=0;i<CloundSprite.length;i++){
+
+						if(CloundSprite[i].x > Canvas.width && Speed > 0){
+							
+							CloundSprite[i].x = 0 - parseInt(Math.random() * (Canvas.width * 2));
+							CloundSprite[i].y = parseInt(Math.random() * 400);
+						
+						}
+						
+						
+						if(CloundSprite[i].x + 64 < 0 && Speed < 0){
+							CloundSprite[i].x = Canvas.width + parseInt(Math.random() * (Canvas.width * 2 ));
+							CloundSprite[i].y = parseInt(Math.random() * 400);
+						}
+						
+
+						
+					}
+				};
+				
+				
+				
+				for(var i=0;i<(Canvas.width / 32) + 5;i++){
+					GroundSprite[i] = new Sprite();
+					GroundSprite[i].Create("Ground" + i);
+					GroundSprite[i].CreateNewImg('./GameRes/LightGround.png');
+					GroundSprite[i].SetPos(i * 32 ,600 - 50);
+					GroundSprite[i].SetSpeed(0,0);
+					director.Scene.appendSprite(GroundSprite[i],1);
+				}
+				
+				GroundSprite[0].Updating = function(){
+					for(var i=0;i<GroundSprite.length;i++){
+						if(GroundSprite[i].x + 32 < 0){
+								
+								if(i == 0){
+									GroundSprite[i].x = GroundSprite[GroundSprite.length - 1].x + 32;
+								} else {
+									GroundSprite[i].x = GroundSprite[i-1].x + 32;
+								}
+								
+						}
+						
+						if(GroundSprite[i].x > Canvas.width){
+							
+								if(i == (GroundSprite.length - 1)){
+									GroundSprite[i].x = GroundSprite[0].x - 32;
+								} else {
+									GroundSprite[i].x = GroundSprite[i+1].x - 32;
+								}
+							
+						}
+					}
+				};
+				
+				
+				function Setspeed(sd){
+					for(var i=0;i<CloundSprite.length;i++){
+						CloundSprite[i].SetSpeed(sd,1);
+					}
+					
+					for(var i=0;i<GroundSprite.length;i++){
+						GroundSprite[i].SetSpeed(sd,0);
+					}
+				};
+				
+				
+			}
+			
+		</script>
+	</head>
+	<body>
+		<script>
+			window.onload = init;
+			</script>
+		<canvas id="Canvas" width="800" height="600" onkeydown="test()">Get rid of it! ur broswer is too old : &lt;</canvas>
+		<p>Use left and right arrow key to control the speed</p>
+	</body>
+</html>
