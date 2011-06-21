@@ -16,9 +16,10 @@ Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before tryin
 ### Update log ###
 
 **version 0.06**
-*[+]Packaged event funcions.
-*[+]some small changes.
-*[+]Added Mario demo 2 using key event functions.
+
+* [+]Packaged event funcions.
+* [+]some small changes.
+* [+]Added Mario demo 2 using key event functions.
 
 **version 0.05**
 
