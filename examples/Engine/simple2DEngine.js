@@ -245,17 +245,20 @@
 								if(Ci!=i){
 									
 									var XCollide = (Math.abs((TempCDSprites[i].x + TempCDSprites[i].Width / 2) - 
-										(TempCDSprites[Ci].x + TempCDSprites[Ci].Width / 2)) < 
+										(TempCDSprites[Ci].x + TempCDSprites[Ci].Width / 2)) <= 
 										Math.abs((TempCDSprites[i].Width + TempCDSprites[Ci].Width) / 2) 
 										);
 									var YCollide = (Math.abs((TempCDSprites[i].y + TempCDSprites[i].Height / 2) -
-										(TempCDSprites[Ci].y + TempCDSprites[Ci].Height / 2)) <
+										(TempCDSprites[Ci].y + TempCDSprites[Ci].Height / 2)) <=
 										Math.abs((TempCDSprites[i].Height + TempCDSprites[Ci].Height) / 2)
 										);
 									
 									
 									if(XCollide && YCollide) {
 										if(TempCDSprites[i].OnCollided) TempCDSprites[i].OnCollided(TempCDSprites[Ci]);
+										TempCDSprites[i].NotCollided = false;
+									} else {
+										TempCDSprites[i].NotCollided = true;
 									}
 									
 									
@@ -333,6 +336,7 @@
 				this.OnCollideYEdge = undefined;
 				
 				this.OnCollided = undefined;
+				this.NotCollided = true;
 				
 				
 				this.Create = function(id) {
@@ -394,8 +398,10 @@
 							console.log(this.Width + ":" + this.Height);
 							
 						} else {
+							this.Width = this.img.width;
+							this.Height = this.img.height;
 							
-							this.img.onload = this.ImageFinishLoading(this.img.width,this.img.height);
+							//this.img.onload = this.ImageFinishLoading(this.img.width,this.img.height);
 							
 						}
 						
