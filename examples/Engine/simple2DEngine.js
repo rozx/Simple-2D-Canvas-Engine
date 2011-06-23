@@ -456,7 +456,7 @@
 						
 					} else {
 						this.SetPlayingFrame(0);
-						console.warn("Error! Frame dose not exist!");
+						console.warn("Error! Frame does not exist!");
 					}
 					
 				};
