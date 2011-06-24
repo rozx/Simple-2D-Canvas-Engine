@@ -25,9 +25,9 @@ Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before tryin
 
 **version 0.07rc1
 
-*[+]New Missle system(Not finished)
-*[+]Some small changes
-*[+]New Missle Demo(Not finished)
+* [+]New Missle system(Not finished)
+* [+]Some small changes
+* [+]New Missle Demo(Not finished)
 
 **version 0.06a**
 
