@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Mario Demo 3 - By Simple2D Engine</title>
+		<title>Mario Demo 4 - By Simple2D Engine</title>
 		<script type="text/javascript" src="./Engine/simple2DEngine.js"></script>
 		<script type="text/javascript">
 			var director = new Director();
@@ -24,6 +24,8 @@
 			var Died = false;
 			var AniTimer,RunTimer;
 			var Speed = 0;
+			var Score = 0;
+			var ScoreSprite;
 			
 
 			function init(){
@@ -33,6 +35,12 @@
 				
 				director.SetBackgroundColor("rgb(64,112,224)");
 				console.log(director);
+				
+				ScoreSprite = new Sprite();
+				ScoreSprite.Create("Score");
+				ScoreSprite.CreateNewText("Score:0", "sans-serif", "white", "15" , "bold");
+				ScoreSprite.SetPos(Canvas.width / 2 , 15);
+				director.Scene.appendSprite(ScoreSprite,100);
 				
 				
 				Mario = new Sprite();
@@ -214,6 +222,10 @@
   			};
   			
   			Mario.Updating = function(){
+  				
+  				Score+= parseInt(Mario.SpeedX / 150);
+  				
+  				ScoreSprite.SetText("Score:" + Score);
   				
   				if(Mario.x < 0) Mario.x = 0;
   				
@@ -533,7 +545,7 @@
 		<script>
 			window.onload = init;
 			</script>
-		<canvas id="Canvas" width="800" height="600" onkeydown="test()">Get rid of it! ur broswer is too old : &lt;</canvas>
+		<canvas id="Canvas" width="800" height="600">Get rid of it! ur broswer is too old : &lt;</canvas>
 		<p>Z = jump, X = Sprint</p>
 	</body>
 </html>

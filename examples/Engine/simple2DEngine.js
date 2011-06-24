@@ -1,5 +1,6 @@
 			var IMAGE = 0 , TEXT = 1;
 			var MAXFPS = 120;
+			var helpfunc = new Helper();
 			
 			function Helper(){
 				
@@ -11,7 +12,6 @@
 					}
 					
 				};
-			
 			}
 			
 			
@@ -27,7 +27,6 @@
 				this.BackgroundColor = "black";
 				this.MouseX = undefined;
 				this.MouseY = undefined;
-				this.Helper = new Helper();
 				
 				
 				this.SetBackgroundColor = function(color){
@@ -53,7 +52,6 @@
 					
 					
 					console.log("Canvas Setting Done!");
-					console.log(this.Context);
 				};
 				
 				this.SetShowFPS = function (IsShow){
@@ -168,11 +166,31 @@
 									break;
 									//alert(this.Scene.Sprites[i].img);
 								}
+							
+							//Updating func
+							
+							if(this.Scene.Sprites[i].Updating) this.Scene.Sprites[i].Updating();
 								
-								if(this.Scene.Sprites[i].Updating) this.Scene.Sprites[i].Updating();
+							// Out of Screen Check
+							
+							if(this.Scene.Sprites[i].x + this.Scene.Sprites[i].Width < 0 ||
+							 this.Scene.Sprites[i].x >this.Canvas.width ||
+							  this.Scene.Sprites[i].y +  this.Scene.Sprites[i].Height < 0 || 
+							  this.Scene.Sprites[i].y > this.Canvas.height
+							  )	{
+							  	
+							  	if(this.Scene.Sprites[i].isMissle) this.Scene.Sprites[i].FatherMissle.OutOfCanvas(this.Scene.Sprites[i]);
+							  }
+							
+								
 								
 							}
 						}
+						
+					
+					
+					
+					
 					// Call Collition detection method
 					
 						if(this.Scene.isCollideDetct)	this.Scene.CollideDetect();
@@ -204,6 +222,8 @@
 				this.Height = undefined;
 				
 				this.Sprites = [];
+				this.Missles = [];
+				
 				this.isCollideDetct = true;
 				
 				
@@ -228,14 +248,16 @@
 									
 									
 								if(TempCDSprites[i].OnCollideXEdge){
-									TempCDSprites[i].OnCollideXEdge();
+										TempCDSprites[i].OnCollideXEdge();
 								}
 							}
 								
 							if(TempCDSprites[i].y < 0 || (TempCDSprites[i].y + TempCDSprites[i].Height) > this.Height ){
 								
 								if(TempCDSprites[i].OnCollideYEdge){
-									TempCDSprites[i].OnCollideYEdge();
+									
+										TempCDSprites[i].OnCollideYEdge();
+
 								}
 							}
 							
@@ -255,11 +277,16 @@
 									
 									
 									if(XCollide && YCollide) {
-										if(TempCDSprites[i].OnCollided) TempCDSprites[i].OnCollided(TempCDSprites[Ci]);
+										
+										if(TempCDSprites[i].isMissle){
+												if(TempCDSprites[i].OnCollided) TempCDSprites[i].OnCollided(TempCDSprites[i],TempCDSprites[Ci]);
+											} else {
+												if(TempCDSprites[i].OnCollided) TempCDSprites[i].OnCollided(TempCDSprites[Ci]);
+											}
 										TempCDSprites[i].NotCollided = false;
 									} else {
 										TempCDSprites[i].NotCollided = true;
-									}
+								}
 									
 									
 							}
@@ -277,6 +304,8 @@
 					} else {
 						this.Sprites[Zid] = Sprite; 
 						this.Sprites[Zid].Zid = Zid;
+						
+						console.log("Appened new Sprite: " + Zid + " (Source:Scene)");
 					}
 					
 				};
@@ -291,11 +320,47 @@
 				
 				this.removeSpriteById = function(SpriteId){
 					for(var i = 0; i<this.Sprites.length;i++){
-						if(this.Sprites[i] && this.Sprites[i].id==SpriteId){
+						if(this.Sprites[i] && this.Sprites[i].id == SpriteId){
+							
+							console.log("Deleted " + SpriteId + " (Source:Scene)");
+							
 							this.Sprites[i] = undefined;
+							
+
 						}
 					}
 				}
+				
+				this.appendMissle = function(Missle){
+					
+					if(this.Missles.length == 0) {
+						
+						this.Missles[0] = Missle;
+						Missle.Id = 0;
+						Missle.InScene = this;
+						
+					} else {
+					
+						for(var i = 0;i<this.Missles.length;i++){
+						
+							if(this.Missles[i] == undefined){
+
+								this.Missles[i] = Missle;
+								Missle.Id = i;
+								Missle.InScene = this;
+								break;
+						}
+					}
+				}
+			};
+				
+				this.removeMissleById = function(Mid){
+				
+					if(this.Missles[Mid]){
+						this.Missles[Mid] = undefined;
+					}
+				}
+				
 
 			}
 			
@@ -337,6 +402,12 @@
 				
 				this.OnCollided = undefined;
 				this.NotCollided = true;
+				
+				//Missle
+				
+				this.isMissle = false;
+				this.MissleId = undefined;
+				this.FatherMissle = undefined;
 				
 				
 				this.Create = function(id) {
@@ -386,29 +457,20 @@
 						this.img = new Image();
 						this.img.src = src;
 						
-						console.log(this.img.offsetHeight);
+						//console.log(this.img.offsetHeight);
 						
-						
-						if(this.img.complete){
-							
-
-							this.Width = this.img.width;
-							this.Height = this.img.height;
-							
-							console.log(this.Width + ":" + this.Height);
-							
-						} else {
-							this.Width = this.img.width;
-							this.Height = this.img.height;
-							
-							//this.img.onload = this.ImageFinishLoading(this.img.width,this.img.height);
-							
-						}
+						this.Width = this.img.width;
+						this.Height = this.img.height;
 						
 						this.Frames[0] = this.img;
 						
 						this.SpriteType = IMAGE;
+						
+						
+					}	else {
+						console.warn("Must Create the sprite first!(Soure:Sprite)");
 					}
+					
 				};
 				
 				this.ImageFinishLoading = function(w,h){
@@ -456,7 +518,7 @@
 						
 					} else {
 						this.SetPlayingFrame(0);
-						console.warn("Error! Frame does not exist!");
+						console.warn("Error! Frame does not exist!(Source: Sprite)");
 					}
 					
 				};
@@ -472,7 +534,133 @@
 					this.Width = parseInt((txt.length * this.Size) / 2);
 				};
 				
-				
-				
-				
 			}
+			
+							
+							
+							
+				function Missle(){
+					
+					this.Id = undefined;
+					this.Sprites = [];
+					this.Collide = false;
+					this.InScene = undefined;
+					this.SpeedX  = 0;
+					this.SpeedY = 0;
+					this.x = 0;
+					this.y = 0;
+					
+					
+					this.create = function(num){
+						
+						if(this.Sprites[0] && this.InScene){
+							
+							var i,spritenum;
+							
+							i=1;
+							spritenum = 0;
+							
+
+							
+							while(spritenum < num){
+								
+								while(this.Sprites[i]){
+									i++;
+								}
+								
+								
+								//this.Sprites[i] = new Sprite();
+								this.Sprites[i] = new Sprite();
+								this.Sprites[i].Create("Missle" + this.Id + "[MId:" + i + "]");
+								this.Sprites[i].CreateNewImg(this.Sprites[0].img.src);
+								
+								this.Sprites[i].x = this.x;
+								this.Sprites[i].y = this.y;
+								this.Sprites[i].SpeedX = this.SpeedX;
+								this.Sprites[i].SpeedY = this.SpeedY;
+								this.Sprites[i].isCollide = this.Collide;
+								if(this.onCollided) this.Sprites[i].OnCollided = this.onCollided;
+								this.Sprites[i].OnCollideXEdge = this.onCollidedX;
+								this.Sprites[i].OnCollideYEdge = this.onCollidedY;
+								this.Sprites[i].MissleId = i;
+								this.Sprites[i].isMissle = true;
+								this.Sprites[i].FatherMissle = this;
+								
+								if(this.onSpriteCreated) this.onSpriteCreated(this.Sprites[i]);
+								
+								this.InScene.appendSprite(this.Sprites[i],i);
+
+								spritenum++;
+								
+							}
+							
+							console.log("Created " + spritenum +  " new Missles" + "(Source:Missle)");
+							
+							
+						} else {
+							
+							console.warn("Initilize and append missle to scene before create!");
+						}
+						
+					}
+					
+					this.delete = function(mid){
+						for(var i=0;i<this.Sprites.length;i++){
+							
+							if(this.Sprites[i].MissleId == mid){
+								
+								console.log("deleted Missle:" + this.Sprites[i].id + "(Source:Missle)");
+								
+								this.InScene.removeSpriteById(this.Sprites[i].id);
+								this.Sprites[i] = undefined;
+							}
+						}
+
+					}
+					
+					
+					
+					this.onSpriteCreated = undefined;
+					
+					this.setPos = function(sx,sy){
+						this.x = sx;
+						this.y = sy;
+						
+						console.log("Set Position to " + sx + ","+ sy + "(Source:Missle)");
+					}
+					
+					this.setSpeed = function(sx,sy){
+						this.SpeedX = sx;
+						this.SpeedY = sy;
+						
+						console.log("Set Speed to " + sx + ","+ sy + "(Source:Missle)");
+					}
+					
+					
+					this.init = function(Sprite){
+						this.Sprites[0] = Sprite;
+						this.Sprites[0].isMissle = true;
+						this.Sprites[0].MissleId = 0;
+						
+						console.log("Initialized complete!" + "(Source:Missle)");
+					}
+					
+					this.setCollide = function(bol){
+						this.Collide = bol;
+						
+						console.log("Set collition to "+ bol + "9Source:Missle)");
+					}
+					
+					
+					
+					
+					this.onCollided = undefined;
+					
+					this.OutOfCanvas = function(meS){
+						meS.FatherMissle.delete(meS.MissleId);	
+					}
+					
+					
+				
+				
+				}

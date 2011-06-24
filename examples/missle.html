@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Missle Demo - By Simple2D Engine</title>
+		<script type="text/javascript" src="./Engine/simple2DEngine.js"></script>
+		<script type="text/javascript">
+			var director = new Director();
+			var MissleSprite = new Sprite();
+			var MissleM = new Missle();
+			
+			function Init(){
+				var Canvas = document.getElementById("Canvas");
+				director.SetCanvas(Canvas);
+				director.InitTimer("director");
+				
+				MissleSprite = new Sprite();
+				MissleM = new Missle();
+				
+				
+				MissleSprite.Create("MissleSprite");
+				MissleSprite.CreateNewImg("./GameRes/fireball.png");
+				MissleSprite.SetPos(400,300);
+				
+				console.log(MissleM);
+				
+				MissleM.init(MissleSprite);
+				
+				MissleM.setPos(400,300);
+				MissleM.setSpeed(80,0);
+				MissleM.setCollide(true);
+				
+				director.Scene.appendMissle(MissleM);
+				
+				MissleM.create(1);
+				
+				//director.Scene.appendSprite(MissleSprite,1);
+				
+			}
+		</script>
+	</head>
+
+	<body>
+		<script>window.onload = Init;
+		</script>
+		<canvas id="Canvas" width="800" height="600">Get rid of it! ur broswer is too old : &lt;</canvas>
+	</body>
+</html>
