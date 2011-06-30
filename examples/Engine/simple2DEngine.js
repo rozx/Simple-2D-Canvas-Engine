@@ -179,7 +179,7 @@
 							  this.Scene.Sprites[i].y > this.Canvas.height
 							  )	{
 							  	
-							  	if(this.Scene.Sprites[i].isMissle) this.Scene.Sprites[i].FatherMissle.OutOfCanvas(this.Scene.Sprites[i]);
+							  	if(this.Scene.Sprites[i].isMissle) this.Scene.Sprites[i].parent.OutOfCanvas(this.Scene.Sprites[i]);
 							  }
 							
 								
@@ -303,6 +303,7 @@
 						
 					} else {
 						this.Sprites[Zid] = Sprite; 
+						if(!this.Sprites[Zid].parent) this.Sprites[Zid].parent = this;
 						this.Sprites[Zid].Zid = Zid;
 						
 						console.log("Appened new Sprite: " + Zid + " (Source:Scene)");
@@ -407,7 +408,7 @@
 				
 				this.isMissle = false;
 				this.MissleId = undefined;
-				this.FatherMissle = undefined;
+				this.parent = undefined;
 				
 				
 				this.Create = function(id) {
@@ -584,7 +585,7 @@
 								this.Sprites[i].OnCollideYEdge = this.onCollidedY;
 								this.Sprites[i].MissleId = i;
 								this.Sprites[i].isMissle = true;
-								this.Sprites[i].FatherMissle = this;
+								this.Sprites[i].parent = this;
 								
 								if(this.onSpriteCreated) this.onSpriteCreated(this.Sprites[i]);
 								
@@ -657,7 +658,7 @@
 					this.onCollided = undefined;
 					
 					this.OutOfCanvas = function(meS){
-						meS.FatherMissle.delete(meS.MissleId);	
+						meS.parent.delete(meS.MissleId);	
 					}
 					
 					
