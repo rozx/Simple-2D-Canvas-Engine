@@ -135,6 +135,11 @@
 							}
 						}
 						
+						this.Context.clearRect(0, 0, this.Canvas.width,this.Canvas.height);
+						
+						this.Context.save();
+						
+						
 					
 						this.Context.fillStyle = this.BackgroundColor;  
 						
@@ -151,10 +156,19 @@
 						for(var i=0;i<this.Scene.Sprites.length;i++){
 							if(this.Scene.Sprites[i]  && this.Scene.Sprites[i].Show){
 								
+								
 								switch(this.Scene.Sprites[i].SpriteType){
 									case IMAGE:
 										if(this.Scene.Sprites[i].img.complete){
-											this.Context.drawImage(this.Scene.Sprites[i].img,this.Scene.Sprites[i].x,this.Scene.Sprites[i].y);
+											
+											
+											//this.Context.translate(this.Scene.Sprites[i].x + (this.Scene.Sprites[i].Width / 2), this.Scene.Sprites[i].y + (this.Scene.Sprites[i].Height / 2)); 
+											//this.Context.rotate(this.Scene.Sprites[i].Angel * Math.PI/180); 
+											
+											this.Context.drawImage(this.Scene.Sprites[i].img,this.Scene.Sprites[i].x,this.Scene.Sprites[i].y );
+											
+											this.Context.translate(0,0); 
+											
 										}
 									break;
 									
@@ -164,8 +178,9 @@
 									this.Context.fillText(this.Scene.Sprites[i].Text,this.Scene.Sprites[i].x,this.Scene.Sprites[i].y);
 									
 									break;
-									//alert(this.Scene.Sprites[i].img);
 								}
+								
+									
 							
 							//Updating func
 							
@@ -185,6 +200,7 @@
 								
 								
 							}
+							
 						}
 						
 					
@@ -194,6 +210,12 @@
 					// Call Collition detection method
 					
 						if(this.Scene.isCollideDetct)	this.Scene.CollideDetect();
+						
+					// restore canvas
+					
+						this.Context.restore();  
+					
+
 							
 					
 					
@@ -380,8 +402,12 @@
 				this.Height = undefined;
 				this.x = 0;
 				this.y = 0;
+				
+				this.Angel = 0;
+				
 				this.SpeedX = 0;
 				this.SpeedY = 0;
+				this.SpeedRotation = 0;
 				
 				// For Text
 				this.Text = undefined;
@@ -408,7 +434,7 @@
 				
 				this.isMissle = false;
 				this.MissleId = undefined;
-				this.parent = undefined;
+				this.Parent = undefined;
 				
 				
 				this.Create = function(id) {
@@ -525,9 +551,10 @@
 				};
 				
 				
-				this.SetSpeed = function(SpeedX,SpeedY) {
+				this.SetSpeed = function(SpeedX,SpeedY,SpeedR) {
 					this.SpeedX = SpeedX;
 					this.SpeedY = SpeedY;
+					this.SpeedRotation = SpeedR;
 				};
 				
 				this.SetText = function(txt) {
@@ -585,7 +612,7 @@
 								this.Sprites[i].OnCollideYEdge = this.onCollidedY;
 								this.Sprites[i].MissleId = i;
 								this.Sprites[i].isMissle = true;
-								this.Sprites[i].parent = this;
+								this.Sprites[i].Parent = this;
 								
 								if(this.onSpriteCreated) this.onSpriteCreated(this.Sprites[i]);
 								
@@ -658,7 +685,7 @@
 					this.onCollided = undefined;
 					
 					this.OutOfCanvas = function(meS){
-						meS.parent.delete(meS.MissleId);	
+						meS.Parent.delete(meS.MissleId);	
 					}
 					
 					

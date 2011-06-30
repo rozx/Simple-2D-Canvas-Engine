@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo 1 - By Simple2D Engine</title>
+		<script type="text/javascript" src="./js/S2D.js"></script>
+		<script type="text/javascript">
+			
+				
+				var S2De = new S2D();
+				var scene;
+				var txsprite = new S2D.TextObject();
+			
+			function init(){
+				var Canvas = document.getElementById("Canvas");;
+			
+				S2De.init2D(Canvas);
+				S2De.initTimer("S2De");
+				scene = S2De.scene;
+				
+				txsprite.create({text : "Hallo World!",font : "sans-serif" , size : 15, style : "bold", color : "red"});
+				
+				scene.appendObject(txsprite,1);
+				
+				txsprite.setPos({x : 300 , y : 300});
+			}
+			
+		</script>
+	</head>
+
+	<body onload = init();>
+		<script>
+		</script>
+		<canvas id="Canvas" width="800" height="600">Get rid of it! ur broswer is too old : &lt;</canvas>
+	</body>
+</html>

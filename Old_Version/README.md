@@ -14,13 +14,6 @@ Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before tryin
 
 ### Examples ###
 
-**!!!NEW VERSION!!!**
-
-coming soon : D
-
-
-**OLD VERSION**
-
 * [Collition Demo(Using Collition Detection System)](http://rozx.github.com/Examples/Collition%20Demo.html)
 * [Mario Demo(Using Sprite Frames System)](http://rozx.github.com/Examples/Mario Demo - By Simple Canvas 2D Engine.html)
 * [Mario Demo2(Using Event System)](http://rozx.github.com/Examples/MarioDemo2.html)
@@ -29,14 +22,6 @@ coming soon : D
 
 
 ### Update log ###
-
-**version 0.1**
-
-* [+]Brand New Version!
-* [+]Rewrite all functions.
-* [+]Much more easier to use!
-* [!]to do list: missle,rotation,event system.
-
 
 **version 0.07rc1**
 

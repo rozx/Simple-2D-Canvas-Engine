@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Rotation Demo - By Simple2D Engine</title>
+		<script type="text/javascript" src="./Engine/simple2DEngine.js"></script>
+		<script type="text/javascript">
+			var director = new Director();
+			var RotateS = new Sprite();
+			
+			function Init(){
+				var Canvas = document.getElementById("Canvas");
+				director.SetCanvas(Canvas);
+				director.InitTimer("director");
+				
+				//director.ShowFPS = false;
+				
+				RotateS = new Sprite();
+				
+				RotateS.Create("RotateS");
+				RotateS.CreateNewImg("./GameRes/Mario/Mario_Die.png");
+				RotateS.SetPos(400,300);
+
+				director.Scene.appendSprite(RotateS,1);
+				
+				RotateS.Updating = function (){
+					RotateS.Angel++;
+					
+					//RotateS.x++;
+					//RotateS.y++;
+				}
+				
+				RotateS2 = new Sprite();
+				
+				RotateS2.Create("RotateS2");
+				RotateS2.CreateNewImg("./GameRes/Mario/Mario_L_Jump.png");
+				RotateS2.SetPos(100,100);
+
+				director.Scene.appendSprite(RotateS2,1);
+				
+				RotateS2.Updating = function (){
+					RotateS2.Angel++;
+					
+					//RotateS.x++;
+					//RotateS.y++;
+				}
+				
+			}
+		</script>
+	</head>
+
+	<body>
+		<script>window.onload = Init;
+		</script>
+		<canvas id="Canvas" width="800" height="600">Get rid of it! ur broswer is too old : &lt;</canvas>
+	</body>
+</html>
