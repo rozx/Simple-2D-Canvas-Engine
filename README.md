@@ -14,19 +14,19 @@ Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before tryin
 
 ### Usage ###
 
-insert this script to your head tag.
+include it in your html:
 
-<script src="js/S2D.js"></script>
+	<script src="js/S2D.js"></script>
 
 to initlize the engine:
 
-<script>
+	<script>
 
-var S2De = new S2D();
-S2De.init2D(Canvas);
-S2De.initTimer("S2De");
+		var S2De = new S2D();
+		S2De.init2D(Canvas);
+		S2De.initTimer("S2De");
 
-</script>
+	</script>
 
 that's it!
 
