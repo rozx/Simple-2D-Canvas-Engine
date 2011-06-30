@@ -16,7 +16,7 @@ Simple2D is a JavaScript based 2D engine, using canvas in HTML5, so before tryin
 
 insert this script to your head tag.
 
-<script><script type="text/javascript" src="./js/S2D.js"></script></script>
+<script src="js/S2D.js"></script>
 
 to initlize the engine:
 
