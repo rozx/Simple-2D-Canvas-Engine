@@ -21,6 +21,7 @@ function S2D(){
 	this.backgroundColor = "black";
 	this.showFPS = true;
 	this.scene = undefined;
+	this.mouse = undefined;
 	
 	
 	// Timers
@@ -37,11 +38,20 @@ function S2D(){
 	this.init2D = function(canvas) {
 		
 		this.canvas = canvas;
+		this.canvas.parent = this;
 		this.context = canvas.getContext("2d");
 		this.scene = new S2D.Scene();
+		this.scene.width = this.canvas.width;
+		this.scene.height = this.canvas.height;
+		this.mouse = new S2D.Mouse();
+		this.mouse.parent = this;
+		
 		
 		
 		if(!this.context) console.warn("Fail to initialize context , Sorry : <");
+		
+		this.canvas.addEventListener("mousemove",this.mouse.getMousePos, false);
+		
 		
 		console.log("initialize complete!(S2D.Engine)");	
 
@@ -59,8 +69,8 @@ function S2D(){
 	this.setting = function(inp){
 		
 		if(inp.backgroundColor) this.backgroundColor = inp.backgroundColor;
-		if(inp.MaxFPS) {
-			this.MaxFPS = inp.MaxFPS;
+		if(inp.maxFPS) {
+			this.maxFPS = inp.maxFPS;
 			clearInterval(this.drawTimer);
 			this.drawTimer = setInterval(this.draw(),parseInt(1000 / this.MaxFPS));
 			
@@ -119,6 +129,9 @@ function S2D(){
 				
 				if(this.scene.objects[i]){
 				
+					if(this.scene.objects[i].speed.x != 0) this.scene.objects[i].x += (this.scene.objects[i].speed.x / this.maxFPS);
+					if(this.scene.objects[i].speed.y != 0) this.scene.objects[i].y += (this.scene.objects[i].speed.y / this.maxFPS);
+					
 					if(this.scene.objects[i].onDraw) this.scene.objects[i].onDraw(this.context);
 					if(this.scene.objects[i].onFrameUpdate) this.scene.objects[i].onFrameUpdate();
 				}
@@ -142,13 +155,44 @@ function S2D(){
 		
 }
 
+		S2D.Mouse = function(){
+			this.x = 0;
+			this.y = 0;
+			this.parent = undefined;
+		
+			this.getMousePos = function(e){
+			
+				if (e.pageX != undefined && e.pageY != undefined) {
+							x = e.pageX;
+							y = e.pageY;
+						}
+						else {
+							x = e.clientX + document.body.scrollLeft +
+								document.documentElement.scrollLeft;
+							y = e.clientY + document.body.scrollTop +
+								document.documentElement.scrollTop;
+						}
+				
+					this.parent.mouse.x = x - this.offsetLeft;
+					this.parent.mouse.y = y - this.offsetTop;
+				
+			};
+		
+		};
+
 
 	S2D.Scene = function (){
 		
 		
 		this.objects = [];
+		this.missles = [];
+		this.width = 0;
+		this.height = 0;
+		
 		
 		this.appendObject = function (ob,zid) {
+			
+				if(!zid) zid=0;
 			
 				if(this.objects[zid]) {
 				
@@ -169,7 +213,24 @@ function S2D(){
 		};
 		
 		this.removeObject = function (did)	{
-			delete this.Objects[did];
+			delete this.objects[did];
+		};
+		
+		
+		this.appendMissle = function(ms){
+			this.missles.push(ms);
+			ms.id = this.missles.length - 1;
+			ms.parent = this;
+			
+			console.log("Missle appended.(S2D.Scene)");
+		};
+		
+		this.removeMissle = function(id){
+			
+			delete this.missles[id];
+			
+			console.log("Missle deleted(S2D.Scene)");
+			
 		};
 		
 		
@@ -244,6 +305,23 @@ function S2D(){
 		
 	};
 	
+	S2D.Speed = function(){
+		
+		this.x = 0;
+		this.y = 0;
+		
+		this.setSpeed = function(s){
+			if(s.x) this.x = s.x;
+			if(s.y) this.y = s.y;
+			
+			console.log("Set Speed.(S2D.Speed)");
+			
+		};
+		
+		
+	
+	};
+	
 	
 	
 	S2D.Object2D = function(){
@@ -260,6 +338,7 @@ function S2D(){
 		this.isCollide = false;
 		this.visiable = true;
 		this.notCollided = true;
+		this.speed = new S2D.Speed();
 		
 		
 		this.onFrameUpdate = undefined;
@@ -332,6 +411,12 @@ function S2D(){
 			
 		};
 		
+		this.getImg = function(){
+		
+			return this.frames[this.currentFrame];
+			
+		};
+		
 	
 	}
 	
@@ -372,6 +457,155 @@ function S2D(){
 			}
 		
 		}
+	
+	};
+	
+	S2D.Missle = function (){
+		
+		
+		this.id = undefined;
+		this.missles = [];
+		this.parent = undefined;
+		this.autoRelease = true;
+		this.x = 0;
+		this.y = 0;
+		this.speed = new S2D.Speed();
+		
+		
+		this.setPos = function(p){
+		
+			this.x = p.x;
+			this.y = p.y;
+		
+		};
+		
+		this.init = function(sprite,ar) {
+		
+			if(!ar) ar = true;
+			
+			this.autoRelease = ar;
+			
+			if(sprite.frames[0]){
+			
+				this.missles[0] = sprite;
+				this.missles[0].name = "OriginMissleSprite";
+				this.missles[0].parent = this;
+				this.missles[0].visible = false;
+		
+			
+				console.log("initialize complete!(S2D.Missle)");
+			} else {
+			
+				console.warn("initialize faild!Object is not a sprite!(S2D.Missle)");
+			}
+		
+		};
+		
+		this.create = function(num,func) {
+			
+			if(this.missles[0] && this.parent) {
+			
+				var ___created = 0;
+				var ___mid = 0;
+			
+				while(___created < num){
+				
+					while(this.missles[___mid]){
+				
+							___mid++;
+					}
+				
+					this.missles[___mid] = new S2D.Sprite();
+					this.missles[___mid].create(this.missles[0].getImg().src);
+					this.missles[___mid].name = "missle[" + this.id + "," + ___mid + "]"
+					this.missles[___mid].parent = this;
+					this.missles[___mid].x = this.x;
+					this.missles[___mid].y = this.y;
+					this.missles[___mid].speed.setSpeed({x: this.speed.x, y: this.speed.y});
+				
+				
+					if(this.autoRelease) this.missles[___mid].onFrameUpdate = function(func){
+			
+						if(func) func();
+				
+						if ((this.x > this.parent.parent.width) || (this.x + this.width < 0)) this.parent.delete(___mid);
+						if ((this.y > this.parent.parent.height) || (this.y + this.height < 0)) this.parent.delete(___mid);
+			
+					};
+				
+						this.parent.appendObject(this.missles[___mid]);
+						___created++;
+						
+				}
+			
+				console.log("Created " + num + " new missles(S2D.Missle)");
+			} else {
+			
+				console.warn("failed to create missles!not initialized yet or not appended to scene!(S2D.Missle)");
+			}
+			
+		};
+		
+		this.delete = function (mid) {
+			
+			this.missles[mid].onFrameUpdate = undefined;
+			
+			delete this.missles[mid];
+			this.missles[mid] = undefined;
+			
+			
+			console.log("Deleted missle(S2D.Missle)");
+		};
+		
+		
+		this.setOnCollidedEvent = function(func) {
+			
+			for(var i=1;i<this.missles.length;i++){
+				
+				this.missles[i].isCollide = true;
+				
+				if(func.Y || func.onCollideYEdge) this.missles[i].onCollideYEdge = func.Y || func.onCollideYEdge;
+				if(func.X || func.onCollideXEdge)	this.missles[i].onCollideXEdge = func.X || func.onCollideXEdge;
+				if(func.Object || func.onCollided)	this.missles[i].onCollided = func.Object || func.onCollided;
+				
+				console.log("Event binded!(S2D.missle)");
+			}
+		
+		};
+		
+	
+	};
+	
+	
+	S2D.Event = function(Engine){
+		
+		this.parent = Engine;
+		
+		this.addEvent = function(ev,func){
+		
+			switch(ev){
+			
+				case "onkeydown","keydown":
+							
+					document.getElementsByTagName("body")[0].onkeydown = func;
+					break;
+				
+				case "onkeyup","keyup":
+				
+					document.getElementsByTagName("body")[0].onkeyup = func;
+					break;
+						
+				case "onkeypress","keypress":
+							
+					document.getElementsByTagName("body")[0].onkeypress = func;
+					break;
+					
+				default :
+					this.parent.canvas.addEventListener(ev, func, false);
+			
+			};
+		
+		};
 	
 	};
 
