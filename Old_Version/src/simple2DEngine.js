@@ -130,8 +130,8 @@
 					
 						for(var i=0;i<this.Scene.Sprites.length;i++){
 							if(this.Scene.Sprites[i]){
-								this.Scene.Sprites[i].x+= this.Scene.Sprites[i].SpeedX / this.MaxFPS;
-								this.Scene.Sprites[i].y+= this.Scene.Sprites[i].SpeedY / this.MaxFPS;
+								this.Scene.Sprites[i].x+= (this.Scene.Sprites[i].SpeedX / this.MaxFPS);
+								this.Scene.Sprites[i].y+= (this.Scene.Sprites[i].SpeedY / this.MaxFPS);
 							}
 						}
 						

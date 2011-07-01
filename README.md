@@ -21,7 +21,7 @@ include it in your html:
 to initlize the engine:
 
 	<script>
-
+		var Canvas = document.getElementById("Canvas");
 		var S2De = new S2D();
 		S2De.init2D(Canvas);
 		S2De.initTimer("S2De");
@@ -47,6 +47,13 @@ coming soon : D
 
 
 ### Update log ###
+**version 0.1a**
+
+* [+]`S2D.Missle`, Missle system online!
+* [+]`S2D.Event`, packaged some events.
+* [+]`S2D.Mouse`
+* [+]`S2D.canvas.parent`, normally, it will be the S2D.
+
 
 **version 0.1**
 

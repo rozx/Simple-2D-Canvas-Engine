@@ -8,7 +8,9 @@
 				
 				var S2De = new S2D();
 				var scene;
-				var txsprite = new S2D.TextObject();
+				var FireballSprite = new S2D.Sprite();
+				var Fireballs = new S2D.Missle();
+				var eventL;
 			
 			function init(){
 				var Canvas = document.getElementById("Canvas");;
@@ -17,11 +19,18 @@
 				S2De.initTimer("S2De");
 				scene = S2De.scene;
 				
-				txsprite.create({text : "Hallo World!",font : "sans-serif" , size : 15, style : "bold", color : "red"});
 				
-				scene.appendObject(txsprite,1);
+				FireballSprite.create("./img/fireball.png");
+				Fireballs.init(FireballSprite,true);
+				Fireballs.setPos({x: 300 , y: 200});
+				Fireballs.speed.setSpeed({x:10});
 				
-				txsprite.setPos({x : 300 , y : 300});
+				scene.appendMissle(Fireballs);
+				
+				Fireballs.create(1);
+				
+				
+				
 			}
 			
 		</script>
