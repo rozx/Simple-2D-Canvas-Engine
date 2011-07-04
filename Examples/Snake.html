@@ -1,0 +1,196 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Snake - By Simple2D Engine</title>
+		<script type="text/javascript" src="./js/S2D.js"></script>
+		<script type="text/javascript">
+			
+				
+				var NORTH = 1,SOUTH = 3,EAST = 2,WEST = 4;
+				
+				var S2De = new S2D();
+				var scene;
+				var eventL;
+				var SnakeHead;
+				var SnakeBody = [];
+				var Apple = new S2D.Shape();
+				var direction = WEST;
+				var RefreshTimer;
+				var ScoreText,Score;
+			
+			function init(){
+				var Canvas = document.getElementById("Canvas");;
+			
+				S2De.init2D(Canvas);
+				S2De.initTimer("S2De");
+				scene = S2De.scene;
+				eventL = new S2D.Event(S2De);
+				Score = 0;
+				ScoreText = new S2D.Text();
+				
+				ScoreText.create({text : "Score: " + Score, size : "15" , color : "white", font: "sans-serif",style : "bold"});
+				ScoreText.setPos({x: 0 , y: 20});
+				
+				scene.appendObject(ScoreText,1);
+				
+				
+				SnakeBody[0] = new S2D.Shape();
+				SnakeBody[0].create({type : "rectangle", x1 : 400 , y1 : 300 , width : 10 , height : 10, color : "green"});
+				SnakeBody[0].oldX = SnakeBody[0].x;
+				SnakeBody[0].oldY = SnakeBody[0].y;
+				SnakeBody[0].isCollide = true;
+				
+				SnakeHead = SnakeBody[0];
+				SnakeHead.name = "SnakeHead"
+				
+				SnakeHead.onFrameUpdate = function(){
+				
+					for(var i = 2; i < SnakeBody.length; i++){
+					
+						if(SnakeHead.x == SnakeBody[i].x && SnakeHead.y == SnakeBody[i].y){
+						
+							alert("Game Over!");
+							
+							clearInterval(RefreshTimer);
+							
+							SnakeHead.onFrameUpdate = undefined;
+							
+							break;
+							
+							
+						}
+						
+					}
+					
+					
+					if(SnakeHead.x < 0) SnakeHead.x = scene.width;
+					if(SnakeHead.x > scene.width) SnakeHead.x = 0;
+					if(SnakeHead.y > scene.height) SnakeHead.y = 0;
+					if(SnakeHead.y < 0) SnakeHead.y = scene.height;
+				
+				};
+				
+				scene.appendObject(SnakeBody[0],1);
+				
+				SnakeBody[1] = new S2D.Shape();
+				SnakeBody[1].create({type : "rectangle", x1 : 410 , y1 : 300 , width : 10 , height : 10, color : "green"});
+				SnakeBody[1].oldX = SnakeBody[1].x;
+				SnakeBody[1].oldY = SnakeBody[1].y;
+				SnakeBody[1].isCollide = true;
+				
+				scene.appendObject(SnakeBody[1],1);
+				
+				
+				Apple.create({type : "circle" , x1 :  5 * parseInt(Math.random() * (scene.width / 5)) ,  y1 : 5 * parseInt(Math.random() * (scene.height / 5)), radius : 5 , color : "red"});
+				Apple.isCollide = true;
+				
+				Apple.onCollided = function(CObject1,CObject2){
+					
+					Apple.setPos({x : 5 * parseInt(Math.random() * (scene.width / 5)), y : 5 * parseInt(Math.random() * (scene.height / 5))});
+					
+					var i = SnakeBody.length;
+					
+					SnakeBody[i] = new S2D.Shape();
+					SnakeBody[i].create({type : "rectangle", x1 : SnakeBody[i - 1].oldX , y1 : SnakeBody[i - 1].oldY , width : 10 , height : 10, color : "green"});
+					SnakeBody[i].isCollide = true;
+					if(i>4) SnakeBody[i].name = "SnakeBody"
+					scene.appendObject(SnakeBody[i],1);
+					
+				};
+
+				scene.appendObject(Apple,1);
+				
+
+				
+				
+				
+				RefreshTimer = setInterval(refresh,30);
+				
+				eventL.addEvent("keydown",function(e){
+				
+				
+					switch(e.keyCode){
+						
+						case 37:
+							if(direction!=WEST && direction!=EAST) direction = WEST;
+						break;
+						
+						case 38:
+							if(direction!=NORTH && direction!=SOUTH) direction = NORTH;
+						break;
+						
+						case 39:
+							if(direction!=WEST && direction!=EAST) direction = EAST;
+						break;
+						
+						case 40:
+							if(direction!=NORTH && direction!=SOUTH) direction = SOUTH;
+						break;
+						
+						default:
+							console.log(e.keyCode);
+						break;
+					
+					}
+				
+				});
+				
+
+				
+			}
+			
+			function refresh(){
+				
+				Score = SnakeBody.length - 2;
+				
+				ScoreText.setting({text : "Score: " + Score})
+				
+				SnakeHead.oldX = SnakeHead.x;
+				SnakeHead.oldY = SnakeHead.y;
+			
+				switch(direction){
+					
+					case NORTH:
+						SnakeHead.setPos({x: SnakeHead.x, y: SnakeHead.y - 10});
+					break;
+					
+					case EAST:
+						SnakeHead.setPos({x: SnakeHead.x + 10, y: SnakeHead.y});
+					break;
+					
+					case SOUTH:
+						SnakeHead.setPos({x: SnakeHead.x, y: SnakeHead.y + 10});
+					break;
+					
+					case WEST:
+						SnakeHead.setPos({x: SnakeHead.x - 10, y: SnakeHead.y});
+					break;
+				}
+				
+				
+				SnakeBody[1].oldX = SnakeBody[1].x;
+				SnakeBody[1].oldY = SnakeBody[1].y;
+				SnakeBody[1].setPos({x: SnakeHead.oldX, y: SnakeHead.oldY});
+	
+				
+
+				
+				for(var i = 2; i< SnakeBody.length;i++){
+					SnakeBody[i].oldX = SnakeBody[i].x;
+					SnakeBody[i].oldY = SnakeBody[i].y;
+					
+					SnakeBody[i].setPos({x: SnakeBody[i - 1].oldX, y: SnakeBody[i - 1].oldY});
+				}
+			}
+			
+		</script>
+	</head>
+
+	<body style = "background-color: white" onload = init();>
+		<script>
+		</script>
+			<div align ="center" style = "width:100%;height:100%;">
+				<canvas id="Canvas" width= "800" height = "600" style = "border:1px; border-color:red" >Get rid of it! ur broswer is too old : &lt;</canvas>
+			</div>
+	</body>
+</html>

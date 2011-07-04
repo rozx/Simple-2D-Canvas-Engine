@@ -34,7 +34,7 @@ that's it!
 
 **!!!NEW VERSION!!!**
 
-coming soon : D
+* [Snake](http://rozx.github.com/Examples/Snake.html)
 
 
 **OLD VERSION**
@@ -47,6 +47,16 @@ coming soon : D
 
 
 ### Update log ###
+
+**version 0.2**
+
+* [+]`S2D.Shape`
+* [+]Snake demo, using S2D.Shape.
+* [-]Bug fixed.
+
+
+
+
 **version 0.1a**
 
 * [+]`S2D.Missle`, Missle system online!

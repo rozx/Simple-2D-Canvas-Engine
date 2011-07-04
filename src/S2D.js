@@ -252,8 +252,7 @@ function S2D(){
 						for(var i=0;i<TempIndex;i++){
 								
 							if(TempCDSprites[i].x < 0 || (TempCDSprites[i].x + TempCDSprites[i].width) > this.width ){
-									
-									
+
 								if(TempCDSprites[i].onCollideXEdge){
 										TempCDSprites[i].onCollideXEdge();
 								}
@@ -262,9 +261,7 @@ function S2D(){
 							if(TempCDSprites[i].y < 0 || (TempCDSprites[i].y + TempCDSprites[i].height) > this.height ){
 								
 								if(TempCDSprites[i].onCollideYEdge){
-									
 										TempCDSprites[i].onCollideYEdge();
-
 								}
 							}
 							
@@ -285,15 +282,14 @@ function S2D(){
 									
 									if(XCollide && YCollide) {
 										
-												if(TempCDSprites[i].OnCollided) TempCDSprites[i].onCollided(TempCDSprites[i],TempCDSprites[Ci]);
+										if(TempCDSprites[i].onCollided) TempCDSprites[i].onCollided(TempCDSprites[i],TempCDSprites[Ci]);
 
 										TempCDSprites[i].notCollided = false;
+										
 									} else {
 										TempCDSprites[i].notCollided = true;
+									}
 								}
-									
-									
-							}
 							
 						}
 						
@@ -420,7 +416,7 @@ function S2D(){
 	
 	}
 	
-	S2D.TextObject = function (){
+	S2D.Text = function (){
 		
 		S2D.Object2D.call(this);
 		
@@ -458,6 +454,147 @@ function S2D(){
 		
 		}
 	
+	};
+	
+	S2D.Shape = function (){
+		
+		S2D.Object2D.call(this);
+		
+		var CIRCLE = 1, RECTANGLE = 2, LINE = 3;
+		
+		this.type = 0;
+		this.shapeV = undefined;
+		this.color;
+		
+		
+		this.create = function(t){
+			
+			switch(t.type){
+				
+				case ("circle" || 1):
+					this.type = 1;
+					if(t.radius){
+						this.width = t.radius;
+					
+					} else if(t.x1 && t.x2 && t.y1 && t.y2) {
+						this.width = Math.sqrt(Math.pow((t.x2 - t.x1),2) + Math.pow((t.y2 - t.y1), 2))
+					}
+					
+					this.height = this.width;
+					this.x = t.x1;
+					this.y = t.y1;
+					
+					break;
+				case ("rectangle" || 2):
+					this.type = 2;
+					
+					if(t.width && t.height){
+						this.width = t.width;
+						this.height = t.height;
+					} else if(t.x1 && t.x2 && t.y1 && t.y2){
+						this.width = Math.abs(t.x2 - t.x1);
+						this.height = Math.abs(t.y2 - t.y1);
+					}
+					
+					this.x = t.x1;
+					this.y = t.y1;
+					
+					break;
+				case ("line" || 3):
+					this.type = 3;
+					
+					if(t.x1 && t.x2 && t.y1 && t.y2){
+						this.width = Math.abs(t.x2 - t.x1);
+						this.height = Math.abs(t.y2 - t.y1);
+					}
+					
+					this.x = t.x1;
+					this.y = t.y1;
+					
+					
+					break;
+			}
+			
+			this.color = t.color || "white";
+			this.shapeV = t;
+		
+		};
+		
+		this.onDraw = function(ctx){
+			
+			switch(this.type){
+			
+				case CIRCLE:
+					
+						ctx.fillStyle=this.color;
+						ctx.beginPath();
+						ctx.arc(this.x,this.y,this.width,0,Math.PI*2,true);
+						ctx.closePath();
+						ctx.fill();
+						break;
+				case RECTANGLE:
+					
+						ctx.fillStyle=this.color;
+						ctx.fillRect(this.x,this.y,this.width,this.height);
+						break;
+				
+				case LINE:
+				
+						ctx.beginPath();
+						ctx.moveTo(this.x,this.y);
+						ctx.lineTo(this.shapeV.x2,this.shapeV.y2);
+						ctx.strokeStyle = this.color;
+						ctx.stroke();
+						break;
+
+
+			}
+		
+		};
+		
+		this.transform = function(t){
+			
+			switch(this.type){
+				case 1:
+					if(t.radius){
+						this.width = t.radius;
+					
+					} else if(t.x1 && t.x2 && t.y1 && t.y2) {
+						this.width = Math.sqrt(Math.pow((t.x2 - t.x1),2) + Math.pow((t.y2 - t.y1), 2))
+					}
+					
+					this.height = this.width;
+					this.x = t.x1;
+					this.y = t.y1;
+				break;
+				
+				case 2:
+					if(t.width && t.height){
+						this.width = t.width;
+						this.height = t.height;
+					} else if(t.x1 && t.x2 && t.y1 && t.y2){
+						this.width = Math.abs(t.x2 - t.x1);
+						this.height = Math.abs(t.y2 - t.y1);
+					}
+					
+					this.x = t.x1;
+					this.y = t.y1;
+				break;
+				
+				case 3:
+					if(t.x1 && t.x2 && t.y1 && t.y2){
+						this.width = Math.abs(t.x2 - t.x1);
+						this.height = Math.abs(t.y2 - t.y1);
+					}
+					
+					this.x = t.x1;
+					this.y = t.y1;
+				break;
+					
+			}
+		};
+		
+		
 	};
 	
 	S2D.Missle = function (){
@@ -582,6 +719,8 @@ function S2D(){
 		this.parent = Engine;
 		
 		this.addEvent = function(ev,func){
+			
+			console.log("New event has been added: " + ev + "(S2D.Event)");
 		
 			switch(ev){
 			
@@ -608,6 +747,8 @@ function S2D(){
 		};
 	
 	};
+	
+	
 
 
 
